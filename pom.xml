@@ -54,9 +54,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:https://github.com/wangzihaogithub/security-filter.git</connection>
-        <developerConnection>scm:git:git@github.com:wangzihaogithub/security-filter.git</developerConnection>
-        <url>git@github.com:wangzihaogithub/security-filter.git</url>
+        <connection>scm:git:https://github.com/wangzihaogithub/email-service.git</connection>
+        <developerConnection>scm:git:git@github.com:wangzihaogithub/email-service.git</developerConnection>
+        <url>git@github.com:wangzihaogithub/email-service.git</url>
         <tag>v1.0.0</tag>
     </scm>
 
