@@ -967,6 +967,10 @@ public class EmailService {
             return stream;
         }
 
+        public void setStream(InputStream stream) {
+            this.stream = stream;
+        }
+
         public File getCacheFile() {
             String id = getId();
             InputStream stream = this.stream;
@@ -1073,6 +1077,14 @@ public class EmailService {
 
         public String getCharset() {
             return charset;
+        }
+
+        public void setCharset(String charset) {
+            this.charset = charset;
+        }
+
+        public void setText(String text) {
+            this.text = text;
         }
 
         @Override
