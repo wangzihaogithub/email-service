@@ -17,7 +17,8 @@
 
 #### 安装教程
 
-1.  添加依赖
+1.  添加依赖, 在pom.xml中加入 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.wangzihaogithub/email-service/badge.svg)](https://search.maven.org/search?q=g:com.github.wangzihaogithub%20AND%20a:email-service)
+
 
             <dependency>
                 <groupId>com.github.wangzihaogithub</groupId>
