@@ -17,7 +17,6 @@ import java.util.Map;
  * @author wangzihao
  */
 public class FileMediaType {
-
     public static final FileMediaType APPLICATION_ATOM_XML;
     public static final FileMediaType APPLICATION_CBOR;
     public static final FileMediaType APPLICATION_FORM_URLENCODED;
@@ -43,7 +42,6 @@ public class FileMediaType {
     public static final FileMediaType TEXT_XML;
     public static final FileMediaType UNKOWN;
     public static final FileMediaType APPLICATION_MSWORD;
-
     private static final Map<String, FileMediaType> FILE_EXT_TYPE_MAP = new LinkedHashMap<>(16, 0.75F, true);
     private static final Map<String, FileMediaType> FILE_TYPE_MAP = new LinkedHashMap<>(16, 0.75F, true);
 
@@ -131,7 +129,6 @@ public class FileMediaType {
     private final InputStream inputStream;
     private boolean known;
     private String url;
-
     private FileMediaType(String type, String subtype,
                           byte[] magicBytes, String magicHex, String magicString,
                           Source source, IOException ioException, InputStream inputStream) {
@@ -140,19 +137,17 @@ public class FileMediaType {
         this.magicBytes = magicBytes;
         this.magicHex = magicHex;
         this.magicString = magicString;
-        this.known = !UNKOWN.type.equals(this.type);
+        this.known = !"unkown".equals(this.type);
         this.source = source;
         this.ioException = ioException;
         this.inputStream = inputStream;
     }
-
     public FileMediaType(FileMediaType other,
                          byte[] magicBytes, String magicHex, String magicString,
                          Source source, IOException ioException, InputStream inputStream) {
         this(other.type, other.subtype, magicBytes, magicHex, magicString,
                 source, ioException, inputStream);
     }
-
     public FileMediaType(String type, String subtype) {
         this(type, subtype, null, null, null, null, null, null);
     }
@@ -329,13 +324,28 @@ public class FileMediaType {
                 "\t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n").getBytes()));
 
 
-        InputStream htmlInputStream = new URL("http://gllue.iterget.com/opt/upload/candidate/2016-05/ce71417c-98dc-4bd1-825e-3c9471a42e34.html").openStream();
+        InputStream htmlInputStream = new URL("https://iterget.oss-cn-beijing.aliyuncs.com/iterget-user/quake/talentIG_channel_20200817_2388120408064view.html?access_token=").openStream();
         FileMediaType htmlMediaType = valueOf(htmlInputStream);
         System.out.println("htmlMediaType = " + htmlMediaType);
 
-        InputStream pdfInputStream = new URL("https://iterget.oss-cn-beijing.aliyuncs.com/iterget-user/quake/talent84bd7d0909d346879dc35aac9f44fb2d.pdf").openStream();
+        InputStream pdfInputStream = new URL("https://iterget.oss-cn-beijing.aliyuncs.com/iterget-user/maimai_cv/196612202_%E6%9D%8E%E6%B3%BD%E9%98%B3186120322763.pdf?access_token=").openStream();
         FileMediaType pdfMediaType = valueOf(pdfInputStream);
         System.out.println("pdfMediaType = " + pdfMediaType);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return type + "/" + subtype;
     }
 
     public boolean isKnown() {
