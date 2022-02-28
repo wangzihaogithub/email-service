@@ -22,7 +22,7 @@
             <dependency>
                 <groupId>com.github.wangzihaogithub</groupId>
                 <artifactId>email-service</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1</version>
             </dependency>
             
 2.  注入对象
