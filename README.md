@@ -27,11 +27,13 @@
             </dependency>
             
 2.  注入对象
+
     
         @Autowired
         private EmailService emailService;
 
 3.  开始读写修改邮件吧
+
 
             EmailService.Account account = new EmailService.Account();
             account.setHost("imap.exmail.qq.com");
