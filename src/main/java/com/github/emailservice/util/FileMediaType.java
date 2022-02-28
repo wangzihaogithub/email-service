@@ -42,7 +42,7 @@ public class FileMediaType {
     public static final FileMediaType TEXT_PLAIN;
     public static final FileMediaType TEXT_XML;
     public static final FileMediaType UNKOWN;
-    private static final FileMediaType APPLICATION_MSWORD;
+    public static final FileMediaType APPLICATION_MSWORD;
 
     private static final Map<String, FileMediaType> FILE_EXT_TYPE_MAP = new LinkedHashMap<>(16, 0.75F, true);
     private static final Map<String, FileMediaType> FILE_TYPE_MAP = new LinkedHashMap<>(16, 0.75F, true);
