@@ -42,8 +42,8 @@ public class FileMediaType {
     public static final FileMediaType TEXT_XML;
     public static final FileMediaType UNKOWN;
     public static final FileMediaType APPLICATION_MSWORD;
-    private static final Map<String, FileMediaType> FILE_EXT_TYPE_MAP = new LinkedHashMap<>(16, 0.75F, true);
-    private static final Map<String, FileMediaType> FILE_TYPE_MAP = new LinkedHashMap<>(16, 0.75F, true);
+    public static final Map<String, FileMediaType> FILE_EXT_TYPE_MAP = new LinkedHashMap<>(16, 0.75F, true);
+    public static final Map<String, FileMediaType> FILE_TYPE_MAP = new LinkedHashMap<>(16, 0.75F, true);
 
     static {
         APPLICATION_ATOM_XML = new FileMediaType("application", "atom+xml");
@@ -74,6 +74,7 @@ public class FileMediaType {
 
         FILE_TYPE_MAP.put("%PDF", FileMediaType.APPLICATION_PDF); //Adobe Acrobat (pdf)
         FILE_TYPE_MAP.put("<!DOCTYPE HTM", FileMediaType.TEXT_HTML); //HTM (htm)
+        FILE_TYPE_MAP.put("<html xmlns:v=\"urn:schemas-microsoft", APPLICATION_MSWORD); //word
         FILE_TYPE_MAP.put("<HTML", FileMediaType.TEXT_HTML); //HTM (htm)
         FILE_TYPE_MAP.put("ffd8ff", FileMediaType.IMAGE_JPEG); //JPEG (jpg)
         FILE_TYPE_MAP.put("89504e47", FileMediaType.IMAGE_PNG); //PNG (png)
@@ -129,6 +130,7 @@ public class FileMediaType {
     private final InputStream inputStream;
     private boolean known;
     private String url;
+
     private FileMediaType(String type, String subtype,
                           byte[] magicBytes, String magicHex, String magicString,
                           Source source, IOException ioException, InputStream inputStream) {
@@ -142,12 +144,14 @@ public class FileMediaType {
         this.ioException = ioException;
         this.inputStream = inputStream;
     }
+
     public FileMediaType(FileMediaType other,
                          byte[] magicBytes, String magicHex, String magicString,
                          Source source, IOException ioException, InputStream inputStream) {
         this(other.type, other.subtype, magicBytes, magicHex, magicString,
                 source, ioException, inputStream);
     }
+
     public FileMediaType(String type, String subtype) {
         this(type, subtype, null, null, null, null, null, null);
     }
@@ -203,7 +207,7 @@ public class FileMediaType {
                 // 有空后期优化成前缀树 O(N) -> O(1).  TrieMap.get(magicHex);
                 for (Map.Entry<String, FileMediaType> entry : FILE_TYPE_MAP.entrySet()) {
                     String key = entry.getKey().toLowerCase(Locale.ENGLISH);
-                    if (magicHex.startsWith(key) || magicString.startsWith(key)) {
+                    if (magicHex.startsWith(key) || magicString.startsWith(key) || key.startsWith(magicString)) {
                         mediaType = entry.getValue();
                         break;
                     }
