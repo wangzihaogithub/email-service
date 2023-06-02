@@ -1,6 +1,4 @@
-package com.github.emailservice.util;/**
- * Created by ITerGet-Tech on 2019/3/22.
- */
+package com.github.emailservice.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,65 +11,28 @@ import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class FileUtil {
+    private static final Pattern PATTERN_ENG = Pattern.compile("^[0-9a-zA-Z]+$");
+    private static Function<String, String> fileExtensionMethod = FileUtil::getFileExtension;
 
-    private static Pattern PATTERN_ENG = Pattern.compile("^[0-9a-zA-Z]+$");
-
-    public static String getFileName(String url) {
-        if (url == null || url.isEmpty()) {
-            return url;
-        }
-        boolean isUrl;
-        String url0;
-        try {
-            isUrl = true;
-            url0 = new URL(url).getPath();
-        } catch (MalformedURLException e) {
-            isUrl = false;
-            url0 = url;
-        }
-        if (url0 == null || url0.isEmpty()) {
-            url0 = url;
-        }
-
-        String substring = url0;
-        if (isUrl) {
-            int index = url0.lastIndexOf("/");
-            if (index != -1) {
-                substring = url0.substring(Math.min(index + 1, url0.length()));
-            }
-        }
-        String name;
-        int index1 = substring.lastIndexOf('.');
-        if (index1 != -1) {
-            name = substring.substring(0, index1);
-        } else {
-            name = substring;
-        }
-        if (isUrl) {
-            name = filterSymbol(name);
-        }
-        return name.replaceFirst("[.]", "");
+    public static Function<String, String> getFileExtensionMethod() {
+        return fileExtensionMethod;
     }
 
-    public static String filterSymbol(String name) {
-        if (name == null || name.isEmpty()) {
-            return name;
-        }
-        String s = name.replaceAll("[“<'>\"| %/?#:;,”+*]", "");
-        // 不能超过文件名的长度上限, 否则导致文件打不开
-        return s.substring(0, Math.min(s.length(), 255));
+    public static void setFileExtensionMethod(Function<String, String> fileExtensionMethod) {
+        FileUtil.fileExtensionMethod = fileExtensionMethod;
+    }
+
+    public static String invokeFileExtensionMethod(String fileName) {
+        return fileExtensionMethod.apply(fileName);
     }
 
     public static String getFileExtension(String fileName) {
-        return getFileExtension(fileName, "");
-    }
-
-    public static String getFileExtension(String fileName, String def) {
         if (fileName == null || fileName.isEmpty()) {
-            return def;
+            return null;
         }
         String fileName0;
         try {
@@ -95,14 +56,15 @@ public class FileUtil {
                 return null;
             }
         } else {
-            return def;
+            return null;
         }
     }
+
     public static synchronized File cacheTempFile(String cacheFileName, IOSupplier<InputStream> inputStream, boolean deleteOnExit) throws IOException {
         if (cacheFileName.length() >= 255) {
-            cacheFileName = cacheFileName.hashCode() + "." + FileUtil.getFileExtension(cacheFileName);
+            cacheFileName = cacheFileName.hashCode() + "." + getFileExtension(cacheFileName);
         }
-        String cacheKey = FileUtil.filterSymbol(cacheFileName);
+        String cacheKey = filterSymbol(cacheFileName);
         File tempFile = new File(System.getProperty("java.io.tmpdir"), cacheKey);
         Path path = tempFile.toPath();
         if (tempFile.exists()) {
@@ -121,7 +83,7 @@ public class FileUtil {
         return tempFile;
     }
 
-    public static String getFileAttribute(Path file, String attrName) {
+    private static String getFileAttribute(Path file, String attrName) {
         try {
             Object value = Files.getAttribute(file, "user:" + attrName);
             if (value instanceof byte[]) {
@@ -133,7 +95,7 @@ public class FileUtil {
         return null;
     }
 
-    public static boolean setFileAttribute(Path file, String attrName, String attrValue) {
+    private static boolean setFileAttribute(Path file, String attrName, String attrValue) {
         if (attrValue == null) {
             return false;
         }
@@ -145,7 +107,7 @@ public class FileUtil {
         }
     }
 
-    public static long copy(InputStream in, Path target, int bufferSize, CopyOption... options)
+    private static long copy(InputStream in, Path target, int bufferSize, CopyOption... options)
             throws IOException {
         // ensure not null before opening file
         Objects.requireNonNull(in);
@@ -195,7 +157,7 @@ public class FileUtil {
         }
     }
 
-    public static long copy(InputStream source, OutputStream sink, int bufferSize)
+    private static long copy(InputStream source, OutputStream sink, int bufferSize)
             throws IOException {
         long nread = 0L;
         byte[] buf = new byte[bufferSize];
@@ -205,6 +167,16 @@ public class FileUtil {
             nread += n;
         }
         return nread;
+    }
+
+    private static String filterSymbol(String name) {
+        if (name == null || name.isEmpty()) {
+            return name;
+        }
+        String s = name.replaceAll("[\\['\"| %/?#:;,+\\]]", "");
+        s = s.replace(" ", "");
+        // 不能超过文件名的长度上限, 否则导致文件打不开
+        return s.substring(0, Math.min(s.length(), 255));
     }
 
     @FunctionalInterface

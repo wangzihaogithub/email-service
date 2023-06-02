@@ -984,7 +984,7 @@ public class EmailService {
         }
 
         public String getExt() {
-            return FileUtil.getFileExtension(getFileName());
+            return FileUtil.invokeFileExtensionMethod(getFileName());
         }
 
         public InputStream getCacheStream() {
