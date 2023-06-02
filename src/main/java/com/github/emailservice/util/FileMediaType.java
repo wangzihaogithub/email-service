@@ -514,7 +514,7 @@ public class FileMediaType {
 
     public boolean isOfd() {
         // 电子发票
-        return "odf".equalsIgnoreCase(getSubtype());
+        return "ofd".equalsIgnoreCase(getSubtype());
     }
 
     public boolean isSafeMedia() {
